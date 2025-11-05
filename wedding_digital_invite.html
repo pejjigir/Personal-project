@@ -272,7 +272,7 @@
             border-radius: 15px;
             padding: 1rem;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             z-index: 1001;
             border: 2px solid rgba(236, 72, 153, 0.2);
@@ -282,6 +282,8 @@
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
         }
 
         .stat-item {
@@ -395,6 +397,26 @@
         .game-action-btn.secondary:hover {
             background: linear-gradient(135deg, #34d399, #10b981);
             box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .game-action-btn.tertiary {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .game-action-btn.tertiary:hover {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            box-shadow: 0 6px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .game-action-btn.quaternary {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .game-action-btn.quaternary:hover {
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.4);
         }
 
         .floating-emoji {
@@ -633,6 +655,63 @@
             transition: opacity 0.3s ease;
         }
 
+        /* Party Popper Effect */
+        .party-popper {
+            position: fixed;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 1003;
+            animation: partyPop 3s ease-out forwards;
+        }
+
+        @keyframes partyPop {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-100px) scale(1.2) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) scale(0.8) rotate(360deg);
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ec4899;
+            pointer-events: none;
+            z-index: 1003;
+            animation: confettiFall 4s ease-out forwards;
+        }
+
+        .confetti:nth-child(odd) {
+            background: #10b981;
+        }
+
+        .confetti:nth-child(3n) {
+            background: #f59e0b;
+        }
+
+        .confetti:nth-child(4n) {
+            background: #8b5cf6;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--random-x, 0), var(--random-y, 200px)) rotate(720deg);
+            }
+        }
+
         @media (max-width: 768px) {
             .modal-content {
                 width: 98vw;
@@ -690,10 +769,10 @@
 
             <div class="action-buttons" id="actionButtons">
                 <a href="https://instagram.com/reel/example" target="_blank" class="action-btn">
-                    ✨ Reveal Insta Reel
+                    ✨ Watch Our Wedding Reel
                 </a>
                 <a href="#invitation" class="action-btn" id="invitationBtn">
-                    💌 View Wedding Invitation
+                    💌 View Invitation
                 </a>
             </div>
         </div>
@@ -716,10 +795,16 @@
             <p id="gameMessageText">You've collected all the celebration vibes!</p>
             <div class="game-end-buttons">
                 <a href="https://www.instagram.com/studios_by_affinity/reel/DQHRIlKj55E/?hl=en" target="_blank" class="game-action-btn">
-                    ✨ Reveal Insta Reel
+                    ✨ Watch Our Pre-Wedding Reel
                 </a>
                 <a href="#invitation" class="game-action-btn secondary" id="gameInvitationBtn">
-                    💌 View Wedding Invitation
+                    💌 View Invitation
+                </a>
+                <button class="game-action-btn tertiary" id="saveTheDateBtn">
+                    📅 Save the Date
+                </button>
+                <a href="#prewedding" class="game-action-btn quaternary" id="preWeddingBtn" target="_blank">
+                    📸 PreWedding Glimpses
                 </a>
             </div>
         </div>
@@ -848,7 +933,7 @@
             
             // Animate falling
             let position = -50;
-            const fallSpeed = 2 + Math.random() * 3;
+            const fallSpeed = 1.5 + Math.random() * 2;
             
             const fallInterval = setInterval(() => {
                 position += fallSpeed;
@@ -911,8 +996,47 @@
             // Remove remaining falling emojis
             document.querySelectorAll('.falling-emoji').forEach(emoji => emoji.remove());
             
-            // Show end message
+            // Show end message first
             showGameEndMessage();
+        }
+
+        // Party popper effect function
+        function createPartyPopperEffect() {
+            // Create party poppers
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const popper = document.createElement('div');
+                    popper.className = 'party-popper';
+                    popper.textContent = '🎉';
+                    popper.style.left = Math.random() * window.innerWidth + 'px';
+                    popper.style.top = Math.random() * (window.innerHeight * 0.7) + 'px';
+                    
+                    document.body.appendChild(popper);
+                    
+                    // Remove after animation
+                    setTimeout(() => {
+                        popper.remove();
+                    }, 3000);
+                }, i * 200);
+            }
+            
+            // Create confetti
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    confetti.style.animationDuration = (3 + Math.random() * 2) + 's';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    // Remove after animation
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 6000);
+                }, i * 50);
+            }
         }
 
         function showGameEndMessage() {
@@ -959,6 +1083,76 @@
             titleElement.textContent = title;
             textElement.textContent = message;
             messageDiv.style.display = 'block';
+            
+            // Create party popper effect around the message box
+            setTimeout(() => {
+                createPartyPopperAroundMessage();
+            }, 300);
+        }
+
+        // Party popper effect around message box
+        function createPartyPopperAroundMessage() {
+            const messageBox = document.getElementById('gameMessage');
+            const rect = messageBox.getBoundingClientRect();
+            
+            // Create party poppers around the message box
+            for (let i = 0; i < 12; i++) {
+                setTimeout(() => {
+                    const popper = document.createElement('div');
+                    popper.className = 'party-popper';
+                    popper.textContent = '🎉';
+                    
+                    // Position around the message box perimeter
+                    const angle = (i / 12) * 2 * Math.PI;
+                    const radius = 150; // Distance from message box center
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    
+                    const x = centerX + Math.cos(angle) * radius;
+                    const y = centerY + Math.sin(angle) * radius;
+                    
+                    popper.style.left = x + 'px';
+                    popper.style.top = y + 'px';
+                    
+                    document.body.appendChild(popper);
+                    
+                    // Remove after animation
+                    setTimeout(() => {
+                        popper.remove();
+                    }, 3000);
+                }, i * 100);
+            }
+            
+            // Create confetti bursting from message box corners
+            const corners = [
+                { x: rect.left, y: rect.top },
+                { x: rect.right, y: rect.top },
+                { x: rect.left, y: rect.bottom },
+                { x: rect.right, y: rect.bottom }
+            ];
+            
+            corners.forEach((corner, index) => {
+                setTimeout(() => {
+                    for (let i = 0; i < 15; i++) {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti';
+                        confetti.style.left = corner.x + 'px';
+                        confetti.style.top = corner.y + 'px';
+                        
+                        // Random direction from corner
+                        const randomX = (Math.random() - 0.5) * 300;
+                        const randomY = (Math.random() - 0.5) * 300;
+                        confetti.style.setProperty('--random-x', randomX + 'px');
+                        confetti.style.setProperty('--random-y', randomY + 'px');
+                        
+                        document.body.appendChild(confetti);
+                        
+                        setTimeout(() => {
+                            confetti.remove();
+                        }, 4000);
+                    }
+                }, index * 200);
+            });
         }
 
         // Custom sound effects for emojis
@@ -1045,6 +1239,68 @@
         document.getElementById('gameInvitationBtn').addEventListener('click', function(e) {
             e.preventDefault();
             showInvitationImage();
+        });
+
+        // Save the Date functionality
+        document.getElementById('saveTheDateBtn').addEventListener('click', function() {
+            // Create calendar event
+            const eventDetails = {
+                title: 'Pravalika & Suresh Wedding Celebration',
+                start: '2024-06-15T16:00:00', // 4:00 PM on June 15, 2024
+                end: '2024-06-15T23:00:00',   // 11:00 PM
+                description: 'Join us for a day filled with love, laughter, and beautiful memories',
+                location: 'Rose Garden Venue'
+            };
+            
+            // Create Google Calendar link
+            const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventDetails.title)}&dates=${eventDetails.start.replace(/[-:]/g, '')}/${eventDetails.end.replace(/[-:]/g, '')}&details=${encodeURIComponent(eventDetails.description)}&location=${encodeURIComponent(eventDetails.location)}`;
+            
+            // Create ICS file content for other calendar apps
+            const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Wedding Invite//Wedding Event//EN
+BEGIN:VEVENT
+UID:wedding-${Date.now()}@pravalikasureshs-wedding.com
+DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTSTART:${eventDetails.start.replace(/[-:]/g, '')}
+DTEND:${eventDetails.end.replace(/[-:]/g, '')}
+SUMMARY:${eventDetails.title}
+DESCRIPTION:${eventDetails.description}
+LOCATION:${eventDetails.location}
+END:VEVENT
+END:VCALENDAR`;
+            
+            // Offer both options
+            const choice = confirm('Add to calendar:\n\nOK = Google Calendar\nCancel = Download .ics file (for Outlook, Apple Calendar, etc.)');
+            
+            if (choice) {
+                // Open Google Calendar
+                window.open(googleCalendarUrl, '_blank');
+            } else {
+                // Download ICS file
+                const blob = new Blob([icsContent], { type: 'text/calendar' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Pravalika-Suresh-Wedding.ics';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        });
+
+        // PreWedding Glimpses functionality
+        document.getElementById('preWeddingBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            // You can update this URL with your pre-wedding photos album
+            const preWeddingUrl = 'https://photos.google.com/share/your-prewedding-album'; // Replace with actual URL
+            
+            // For now, show a message
+            alert('📸 PreWedding Glimpses\n\nComing soon! Our beautiful pre-wedding moments will be shared here. Stay tuned for these magical memories! 💕');
+            
+            // Uncomment when you have the album ready:
+            // window.open(preWeddingUrl, '_blank');
         });
 
         // Function to show invitation image in modal
