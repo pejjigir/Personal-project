@@ -880,6 +880,155 @@
                 font-size: 1.5rem;
             }
         }
+
+        /* Dual Invitation Modal Styles */
+        .dual-invitation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+        }
+
+        .dual-invitation-modal.show {
+            display: block;
+        }
+
+        .dual-invitation-content {
+            position: relative;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(236, 72, 153, 0.3);
+            box-shadow: 0 8px 32px rgba(236, 72, 153, 0.2);
+        }
+
+        .dual-invitation-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .dual-invitation-header h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            color: #be185d;
+            margin-bottom: 0.5rem;
+        }
+
+        .dual-invitation-header p {
+            color: #9333ea;
+            font-size: 1.2rem;
+        }
+
+        .invitation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .invitation-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .invitation-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 35px rgba(236, 72, 153, 0.3);
+        }
+
+        .invitation-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .invitation-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ec4899;
+            text-align: center;
+        }
+
+        .invitation-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(190, 24, 93, 0.9));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .close-dual-invitation {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ec4899;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.5);
+            transition: all 0.3s ease;
+            z-index: 2001;
+        }
+
+        .close-dual-invitation:hover {
+            background: #be185d;
+            transform: scale(1.1);
+        }
+
+        /* Mobile styles for dual invitation */
+        @media (max-width: 768px) {
+            .dual-invitation-content {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            .invitation-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .dual-invitation-header h2 {
+                font-size: 2rem;
+            }
+
+            .dual-invitation-header p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dual-invitation-header h2 {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -925,8 +1074,11 @@
                 <a href="https://instagram.com/reel/example" target="_blank" class="action-btn">
                     ✨ Watch Our Wedding Reel
                 </a>
-                <a href="#invitation" class="action-btn" id="invitationBtn">
-                    💌 View Invitation
+                <a href="#bride-invitation" class="action-btn" id="brideInvitationBtn">
+                    � Bride's Side Invitation
+                </a>
+                <a href="#groom-invitation" class="action-btn" id="groomInvitationBtn">
+                    🤵 Groom's Side Invitation
                 </a>
             </div>
         </div>
@@ -951,8 +1103,11 @@
                 <a href="https://www.instagram.com/studios_by_affinity/reel/DQHRIlKj55E/?hl=en" target="_blank" class="game-action-btn">
                     ✨ Watch Our Pre-Wedding Reel
                 </a>
-                <a href="#invitation" class="game-action-btn secondary" id="gameInvitationBtn">
-                    💌 View Invitation
+                <a href="#bride-invitation" class="game-action-btn secondary" id="gameBrideInvitationBtn">
+                    � Bride's Side Invitation
+                </a>
+                <a href="#groom-invitation" class="game-action-btn secondary" id="gameGroomInvitationBtn">
+                    🤵 Groom's Side Invitation
                 </a>
                 <button class="game-action-btn tertiary" id="saveTheDateBtn">
                     📅 Save the Date
@@ -985,6 +1140,20 @@
             </div>
             <div class="photo-grid" id="photoGrid">
                 <!-- Photos will be loaded here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Dual Invitation Modal -->
+    <div class="dual-invitation-modal" id="dualInvitationModal">
+        <div class="dual-invitation-content">
+            <button class="close-dual-invitation" id="closeDualInvitation">×</button>
+            <div class="dual-invitation-header">
+                <h2>💌 Wedding Invitations</h2>
+                <p>Click on any invitation to view in full screen</p>
+            </div>
+            <div class="invitation-grid" id="invitationGrid">
+                <!-- Invitation cards will be loaded here dynamically -->
             </div>
         </div>
     </div>
@@ -1430,10 +1599,72 @@
         }
 
         // Close game and show buttons
-        document.getElementById('gameInvitationBtn').addEventListener('click', function(e) {
+        document.getElementById('gameBrideInvitationBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            showInvitationImage();
+            showBrideInvitation();
         });
+
+        document.getElementById('gameGroomInvitationBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            showGroomInvitation();
+        });
+
+        // Action buttons functionality
+        document.getElementById('brideInvitationBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            showBrideInvitation();
+        });
+
+        document.getElementById('groomInvitationBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            showGroomInvitation();
+        });
+
+        // Function to show bride's invitation
+        function showBrideInvitation() {
+            showInvitationImage('https://raw.githubusercontent.com/pejjigir/Personal-project/refs/heads/main/Pk%20Invite.jpeg', "👰 Bride's Side Invitation");
+        }
+
+        // Function to show groom's invitation  
+        function showGroomInvitation() {
+            showInvitationImage('https://raw.githubusercontent.com/pejjigir/Personal-project/refs/heads/main/Chigiri%20Invite.jpeg', "🤵 Groom's Side Invitation");
+        }
+
+        // Updated function to show invitation image in modal
+        function showInvitationImage(imageUrl, title) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            // Update loading text
+            loadingSpinner.querySelector('.loading-text').textContent = `Loading ${title}...`;
+            
+            // Show modal with loading spinner
+            modal.classList.add('show');
+            loadingSpinner.style.display = 'block';
+            modalImage.classList.remove('loaded');
+            modalImage.classList.add('loading');
+            
+            // Create a new image object to preload
+            const img = new Image();
+            img.onload = function() {
+                modalImage.src = imageUrl;
+                loadingSpinner.style.display = 'none';
+                modalImage.classList.remove('loading');
+                modalImage.classList.add('loaded');
+            };
+            
+            img.onerror = function() {
+                loadingSpinner.innerHTML = `<div class="loading-text" style="color: #ef4444;">Failed to load ${title}. Please try again.</div>`;
+                setTimeout(() => {
+                    modal.classList.remove('show');
+                    loadingSpinner.style.display = 'block';
+                    loadingSpinner.innerHTML = '<div class="spinner"></div><div class="loading-text">Loading invitation...</div>';
+                }, 2000);
+            };
+            
+            img.src = imageUrl;
+        }
 
         // Save the Date functionality
         document.getElementById('saveTheDateBtn').addEventListener('click', function() {
@@ -1644,43 +1875,6 @@ END:VCALENDAR`;
                 this.classList.remove('show');
             }
         });
-
-        // Function to show invitation image in modal
-        function showInvitationImage() {
-            const imageUrl = 'https://github.com/pejjigir/Personal-project/raw/main/Pk%20Invite.jpeg';
-            const modal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('modalImage');
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            
-            // Show modal with loading spinner
-            modal.classList.add('show');
-            loadingSpinner.style.display = 'block';
-            modalImage.classList.remove('loaded');
-            modalImage.classList.add('loading');
-            
-            // Create a new image object to preload
-            const img = new Image();
-            img.onload = function() {
-                // Image loaded successfully
-                modalImage.src = imageUrl;
-                loadingSpinner.style.display = 'none';
-                modalImage.classList.remove('loading');
-                modalImage.classList.add('loaded');
-            };
-            
-            img.onerror = function() {
-                // Image failed to load
-                loadingSpinner.innerHTML = '<div class="loading-text" style="color: #ef4444;">Failed to load invitation. Please try again.</div>';
-                setTimeout(() => {
-                    modal.classList.remove('show');
-                    loadingSpinner.style.display = 'block';
-                    loadingSpinner.innerHTML = '<div class="spinner"></div><div class="loading-text">Loading invitation...</div>';
-                }, 2000);
-            };
-            
-            // Start loading the image
-            img.src = imageUrl;
-        }
 
         // Close modal functionality
         document.getElementById('closeModal').addEventListener('click', function() {
